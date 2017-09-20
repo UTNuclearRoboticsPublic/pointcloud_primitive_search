@@ -1,0 +1,125 @@
+
+primitive_search:
+  primitive_search:
+    min_cloud_size:       50
+    # NOTE - task names in task_list below MUST match the subheadings under the tasks heading
+    task_list:            [ left_wall, right_wall, floor, big_duct, little_duct ]
+    plane_options:
+      max_iterations:   50
+      dist_threshold:   0.005       
+    cylinder_options:
+      max_iterations:   50
+      dist_threshold:   0.005
+    map_offset:     [0.0, -0.65, 0.0, 0.0, 0.0, 0.0]
+    tasks:
+      left_wall:
+        type:                   5     # Planar Segmentation
+        max_iterations:         500
+        dist_threshold:         0.04      
+        should_publish:         true
+        publish_topic:          left_wall
+        should_publish_r:       true
+        publish_topic_r:        left_wall_less
+        remove_cloud:           true
+        # Additional parameters (not in normal pcl_process yaml task structure):
+        angle_threshold:        5                  # degrees
+        offset_threshold:       0.06                # meteres
+        check_orientation:      true
+        check_distance:         true
+        expected_coefficients:  [0.0, 1.0, 0.0, 1.37]
+          # +/- thickness, +/- horizontal, +/- other 
+        clip_boundaries:        [-0.25, 0.25, -4.0, 4.0, 0.1, 2.5] #[-0.2, 0.2, -10.0, 10.0, -0.3, 5.0] 
+      right_wall: 
+        type:                   5     # Planar Segmentation
+        max_iterations:         500
+        dist_threshold:         0.04      
+        should_publish:         true
+        publish_topic:          right_wall
+        should_publish_r:       true
+        publish_topic_r:        right_wall_less
+        remove_cloud:           true
+        # Additional parameters (not in normal pcl_process yaml task structure):
+        angle_threshold:        5                  # degrees
+        offset_threshold:       0.06                # meteres
+        check_orientation:      true
+        check_distance:         true
+        expected_coefficients:  [0.0, -1.0, 0.0, 1.37]
+          # +/- thickness, +/- horizontal, +/- other
+        clip_boundaries:        [-0.25, 0.25, -4, 4, 0.1, 2.5]
+      floor: 
+        type:                   5     # Planar Segmentation
+        max_iterations:         500
+        dist_threshold:         0.04      
+        should_publish:         true
+        publish_topic:          floor
+        should_publish_r:       true
+        publish_topic_r:        floor_less
+        remove_cloud:           true
+        # Additional parameters (not in normal pcl_process yaml task structure):
+        angle_threshold:        5                  # degrees
+        offset_threshold:       0.04                # meteres
+        check_orientation:      false
+        check_distance:         true
+        expected_coefficients:  [0.0, 0.01, 1.0, 0.0]
+          # +/- thickness, +/- horizontal, +/- other
+        clip_boundaries:        [-0.1, 0.1, -4, 4, -3, 3]
+      big_duct:           
+        type:                   6     # Cylinder Segmentation
+        max_iterations:         500
+        dist_threshold:         0.06      
+        max_radius:             0.6       # meters
+        should_publish:         true
+        publish_topic:          big_duct
+        should_publish_r:       true
+        publish_topic_r:        big_duct_less
+        remove_cloud:           true
+        # Additional parameters (not in normal pcl_process yaml task structure):
+        radius_threshold:       0.05                # meteres
+        angle_threshold:        5                  # degrees
+        offset_threshold:       0.05                # meteres
+        check_radius:           true
+        check_orientation:      true
+        check_distance:         true
+        expected_coefficients:  [0.0, 0.75, 0.91, 1.0, 0.02, 0.02, 0.4572]
+          # +/- length, +/-/+/- radii
+        clip_boundaries:        [-2, 4, -0.60, 0.60, -0.60, 0.60]
+      little_duct:           
+        type:                   6     # Cylinder Segmentation
+        max_iterations:         500
+        dist_threshold:         0.06      
+        max_radius:             0.35       # meters
+        should_publish:         true
+        publish_topic:          little_duct
+        should_publish_r:       true
+        publish_topic_r:        little_duct_less
+        remove_cloud:           true
+        # Additional parameters (not in normal pcl_process yaml task structure):
+        radius_threshold:       0.02                # meteres
+        angle_threshold:        5                  # degrees
+        offset_threshold:       0.05                # meteres
+        check_radius:           true
+        check_orientation:      true 
+        check_distance:         true
+        expected_coefficients:  [0.0, -0.49, 1.8, 1.0, 0.02, 0.02, 0.2286]
+          # +/- length, +/-/+/- radii
+        clip_boundaries:        [-2, 4, -0.30, 0.30, -0.30, 0.30]
+      barrel:           
+        type:                   6     # Cylinder Segmentation
+        max_iterations:         500
+        dist_threshold:         0.02      
+        max_radius:             0.35       # meters
+        should_publish:         true
+        publish_topic:          barrel
+        should_publish_r:       true
+        publish_topic_r:        barrel_less
+        remove_cloud:           true
+        # Additional parameters (not in normal pcl_process yaml task structure):
+        radius_threshold:       0.04                # meteres
+        angle_threshold:        5                  # degrees
+        offset_threshold:       0.1                # meteres
+        check_radius:           true
+        check_orientation:      true
+        check_distance:         true
+        expected_coefficients:  [4.92, 0.5, -5.2, 0.0, 0.02, 1.0, 0.284]
+          # +/- length, +/-/+/- radii
+        clip_boundaries:        [-7, 7, -0.5, 0.5, -0.5, 0.5]

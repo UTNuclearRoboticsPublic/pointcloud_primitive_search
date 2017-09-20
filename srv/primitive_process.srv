@@ -1,0 +1,10 @@
+
+# -------------------------------- GOAL DEFINITION ---------------------------------
+
+sensor_msgs/PointCloud2 pointcloud
+search_input[] inputs
+
+---
+# -------------------------------- RESULT DEFINITION ---------------------------------
+
+search_output[] outputs

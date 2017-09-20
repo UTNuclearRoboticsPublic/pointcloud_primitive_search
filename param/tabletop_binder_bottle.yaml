@@ -1,0 +1,84 @@
+
+primitive_search:
+  primitive_search:
+    min_cloud_size:       50
+    # NOTE - task names in task_list below MUST match the subheadings under the tasks heading
+    task_list:            [ table, binder, wall, bottle ]
+    plane_options:
+      max_iterations:   50
+      dist_threshold:   0.005       
+    cylinder_options:
+      max_iterations:   50
+      dist_threshold:   0.005
+    tasks:
+      table:
+        type:                   5     # Planar Segmentation
+        max_iterations:         500
+        dist_threshold:         0.01      
+        should_publish:         true
+        publish_topic:          table
+        should_publish_r:       true
+        publish_topic_r:        table_less
+        remove_cloud:           true
+        # Additional parameters (not in normal pcl_process yaml task structure):
+        angle_threshold:        15                  # degrees
+        offset_threshold:       0.02                # meteres
+        check_orientation:      false
+        check_distance:         false
+        expected_coefficients:  [-0.097, 0.425, 0.900, -0.215]
+          # +/- thickness, +/- horizontal, +/- other 
+        clip_boundaries:        [-0.025, 0.025, -2.0, 2.0, -1.0, 1.0] #[-0.2, 0.2, -10.0, 10.0, -0.3, 5.0] 
+      binder: 
+        type:                   5     # Planar Segmentation
+        max_iterations:         500
+        dist_threshold:         0.005      
+        should_publish:         true
+        publish_topic:          binder
+        should_publish_r:       true
+        publish_topic_r:        binder_less
+        remove_cloud:           true
+        # Additional parameters (not in normal pcl_process yaml task structure):
+        angle_threshold:        15                  # degrees
+        offset_threshold:       0.02                # meteres
+        check_orientation:      false
+        check_distance:         false
+        expected_coefficients:  [-0.276, -0.898, 0.343, 0.643]
+          # +/- thickness, +/- horizontal, +/- other
+        clip_boundaries:        [-0.025, 0.025, -10, 10, -1.0, 1.0]
+      wall: 
+        type:                   5     # Planar Segmentation
+        max_iterations:         500
+        dist_threshold:         0.005      
+        should_publish:         true
+        publish_topic:          wall
+        should_publish_r:       true
+        publish_topic_r:        wall_less
+        remove_cloud:           true
+        # Additional parameters (not in normal pcl_process yaml task structure):
+        angle_threshold:        15                  # degrees
+        offset_threshold:       0.02                # meteres
+        check_orientation:      false
+        check_distance:         false
+        expected_coefficients:  [0.546, -0.722, 0.423, 0.557]
+          # +/- thickness, +/- horizontal, +/- other
+        clip_boundaries:        [-0.025, 0.025, -10, 10, -1.0, 1.0]
+      bottle:           
+        type:                   6     # Cylinder Segmentation
+        max_iterations:         500
+        dist_threshold:         0.02      
+        max_radius:             0.35       # meters
+        should_publish:         true
+        publish_topic:          bottle
+        should_publish_r:       true
+        publish_topic_r:        bottle_less
+        remove_cloud:           true
+        # Additional parameters (not in normal pcl_process yaml task structure):
+        radius_threshold:       0.02                # meteres
+        angle_threshold:        15                  # degrees
+        offset_threshold:       0.02                # meteres
+        check_radius:           false
+        check_orientation:      false
+        check_distance:         false
+        expected_coefficients:  [0.013, -0.610, 0.00, -0.0745, 0.508, 0.910, 0.055]
+          # +/- length, +/-/+/- radii
+        clip_boundaries:        [-0.25, 0.25, -0.1, 0.1, -0.1, 0.1]

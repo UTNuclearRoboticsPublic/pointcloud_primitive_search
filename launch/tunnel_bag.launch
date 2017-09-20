@@ -1,0 +1,62 @@
+<launch>
+  <arg name="rviz_file"         default="$(arg home_dir)/rviz/camera_only.rviz" />  
+  <arg name="camera_type"       default="r200" />
+  <arg name="launch_seg"        default="true" />
+  <arg name="yaml_file_name"    default="tunnel_basic" />
+  <arg name="prim_search_name"  default="tunnel_search" />
+
+  <!-- RViz -->
+  <!--node
+    name    = "rviz_node"	
+    pkg     = "rviz"
+    type    = "rviz"
+    output  = "screen"
+  >
+  </node -->
+
+  <!-- Map Publisher -->
+  <rosparam command="load" file="$(find pointcloud_processing_server)/param/map_maker/map_maker_pcs.yaml" />
+  <node
+    name    = "map_maker_pcs"
+    pkg     = "pointcloud_processing_server"
+    type    = "map_maker_pcs"
+    args    = ""
+    output  = "screen"
+  >
+  </node>
+
+  <rosparam command="load" file="$(find pointcloud_processing_server)/param/pointcloud_process_from_yaml/$(arg yaml_file_name).yaml" />
+  <rosparam command="load" file="$(find pointcloud_primitive_search)/param/primitive_search/$(arg prim_search_name).yaml" />
+  <group if="$(arg launch_seg)">
+    <!-- PointcloudProcessing Server -->
+    <node
+      name    = "pointcloud_processing_server"
+      pkg     = "pointcloud_processing_server"
+      type    = "pointcloud_processing_server"
+      args    = ""
+      output  = "screen"
+    >
+    </node>
+    <!-- PointcloudProcessing Client -->
+    <node
+      name    = "test_segmentation"
+      pkg     = "pointcloud_primitive_search"
+      type    = "example_client"
+      args    = ""
+      output  = "screen"
+    >
+      <param name="base_yaml_file_name" type="str" value="$(arg yaml_file_name)" />
+    </node>
+    <!-- Primitive Search Server -->
+    <node 
+      name    = "primitive_search"
+      pkg     = "pointcloud_primitive_search"
+      type    = "primitive_search" 
+      args    = ""
+      output  = "screen"
+    >
+    </node>
+
+  </group>
+
+</launch>
