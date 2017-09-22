@@ -23,7 +23,7 @@ bool PrimitiveSearch::primitiveSearch(pointcloud_primitive_search::primitive_pro
 // -------------------------- Actual loop to look for primitives! --------------------------
     bool match_found = false;
     bool process_failed = false;
-    for(int i=0; i<rich_processes_.size(); i++)
+    for(int i=0; i<req.inputs.size(); i++)
     {
         ROS_DEBUG_STREAM("[PrimitiveSearch] Starting a new primitive search...");
         ros::Time time_start = ros::Time::now();
@@ -50,7 +50,7 @@ bool PrimitiveSearch::primitiveSearch(pointcloud_primitive_search::primitive_pro
             if(process_failed)
             {
                 ROS_ERROR_STREAM("[PrimitiveSearch] Segmentation process failed during 'searchForPrimitives' call, on process " << current_process.request.tasks[1].name << "!");
-                for (int j=i+1; j<rich_processes_.size(); j++)
+                for (int j=i+1; j<req.inputs.size(); j++)
                     current_process.response.failed = true; 
                 break;
             }
@@ -92,9 +92,6 @@ bool PrimitiveSearch::primitiveSearch(pointcloud_primitive_search::primitive_pro
         search_output.failed = current_process.response.failed;
         search_output.failed_during_task_num = current_process.response.failed_during_task_num;
         res.outputs.push_back(search_output);
-
-        //req.process_pub.publish(rich_processes_[i].process);
-        //req.marker_pub.publish(rich_processes_[i].clipping_marker);
 
         ros::Duration search_duration = ros::Time::now() - time_start;
         ROS_INFO_STREAM("[PrimitiveSearch] Finished a primitive search! Entire search took " << search_duration << " seconds.");

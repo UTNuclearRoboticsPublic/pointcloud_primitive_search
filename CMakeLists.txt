@@ -39,14 +39,14 @@ generate_messages(
 
 catkin_package(
   INCLUDE_DIRS include
-  LIBRARIES reg_creation primitive_process_creation
+  LIBRARIES reg_creation primitive_process_creation primitive_process_publisher
 )
 
 include_directories(include ${catkin_INCLUDE_DIRS} ${OpenCV_INCLUDE_DIRS} ${pcl_INCLUDE_DIRS})
 
 add_executable(example_client src/example_client.cpp)
 target_link_libraries( 
-  example_client
+  example_client primitive_process_publisher primitive_process_creation
   ${catkin_LIBRARIES}
 )
 target_link_libraries(example_client)
@@ -69,6 +69,9 @@ add_dependencies(
 
 add_library(primitive_process_creation src/primitive_process_creation.cpp)
 add_dependencies(primitive_process_creation ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS} pointcloud_utilities pointcloud_task_creation)
+
+add_library(primitive_process_publisher src/primitive_process_publisher.cpp)
+add_dependencies(primitive_process_publisher ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ## Install project namespaced headers
 install(DIRECTORY include/${PROJECT_NAME}/

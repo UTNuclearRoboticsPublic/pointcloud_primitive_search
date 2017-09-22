@@ -14,29 +14,9 @@ public:
 	std::vector<pointcloud_processing_server::pointcloud_process> search(sensor_msgs::PointCloud2 input);
 	bool primitiveSearch(pointcloud_primitive_search::primitive_process::Request &req, pointcloud_primitive_search::primitive_process::Response &res);
 
-	struct PointcloudPrimitiveProcess
-	{
-		pointcloud_processing_server::pointcloud_process process;
-		std::vector<float> expected_coefficients;
-		std::vector<float> clipping_boundaries;
-		
-		float angle_threshold;
-		float offset_threshold;
-		float radius_threshold;
-		bool check_orientations;
-		bool check_distances;
-		bool check_radii;
-
-		visualization_msgs::Marker clipping_marker;
-		ros::Publisher marker_pub;
-		PointcloudProcessPublisher process_pub;
-	};
-
 private:
 	ros::NodeHandle nh_;
-
-    std::vector<PointcloudPrimitiveProcess> rich_processes_;
-
+	
 	float plane_max_it;
 	float plane_dist_thresh;
 	float cylinder_max_it;

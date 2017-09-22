@@ -3,7 +3,7 @@
 
 namespace PrimitiveProcessCreation
 {
-	void createProcesses(std::string yaml_file_name, pointcloud_primitive_search::primitive_process& primitive_process)
+	void createProcesses(pointcloud_primitive_search::primitive_process *primitive_process, std::string yaml_file_name)
 	{
 	// -------------------------------------------------------------------------------------------------
 	// ------------------- Basic initializations of some necessary global parameters -------------------
@@ -43,7 +43,7 @@ namespace PrimitiveProcessCreation
 	// ------------------------------------------------------------------------------------------
 	// --------------------- Create list of processes and associated data -----------------------
 
-	    primitive_process.request.inputs.clear();
+	    primitive_process->request.inputs.clear();
 	    bool temp_bool;
 	    float temp_float;
 	    // Splitting the single primitive_process into a list of single-task processes, one for each primitive desired
@@ -210,7 +210,8 @@ namespace PrimitiveProcessCreation
 
 	        search_input.clipping_marker = PointcloudUtilities::makeClippingVisualization(clipping_pose, temp_clipping_data, search_input.tasks[0].name, i, marker_type);
 
-	        primitive_process.request.inputs.push_back(search_input);
+	        primitive_process->request.inputs.push_back(search_input);
+
 	    }
 	}
 
