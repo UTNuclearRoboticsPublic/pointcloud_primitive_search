@@ -34,10 +34,10 @@ bool PrimitiveSearch::primitiveSearch(pointcloud_primitive_search::primitive_pro
         current_process.request.pointcloud = req.pointcloud;
         current_process.request.min_cloud_size = req.inputs[i].min_cloud_size;
 
-        while ( !match_found && !process_failed )
+        while ( !match_found && !process_failed && ros::ok()  )
         {
             int failure_count = 0;
-            while ( !client_.call(current_process) ) // If we couldn't read output, the service probably isn't up yet --> retry
+            while ( !client_.call(current_process) && ros::ok()  ) // If we couldn't read output, the service probably isn't up yet --> retry
             {
                 ROS_ERROR_STREAM("[PrimitiveSearch] Service 'pointcloud_service' returned false during process " << current_process.request.tasks[1].name << " - may not be up yet. Trying again in 2 seconds...");
                 if ( failure_count > 5 )
