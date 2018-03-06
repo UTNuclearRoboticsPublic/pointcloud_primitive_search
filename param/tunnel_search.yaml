@@ -10,7 +10,7 @@ primitive_search:
     cylinder_options:
       max_iterations:   50
       dist_threshold:   0.005
-    map_offset:     [0.0, 0.4, 0.0, 0.0, 0.0, 0.0]
+    map_offset:     [0.0, -0.6, 0.0, 0.0, 0.1, 0.0]
     tasks:
       left_wall:
         type:                   5     # Planar Segmentation
@@ -102,7 +102,7 @@ primitive_search:
         check_distance:         false
         expected_coefficients:  [0.0, -0.49, 1.8, 1.0, 0.02, 0.02, 0.2286]
           # +/- length, +/-/+/- radii
-        clip_boundaries:        [-2, 4, -0.30, 0.30, -0.30, 0.30]
+        clip_boundaries:        [-2, 4, -0.35, 0.35, -0.35, 0.35]
       barrel:           
         type:                   6     # Cylinder Segmentation
         max_iterations:         500
