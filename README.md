@@ -40,11 +40,13 @@ An example launch file usage can be run by launching the launch/tunnel_search.la
 roslaunch pointcloud_primitive_search tunnel_search.launch
 ```
 
-The user can also construct their own client file to interface with the pointcloud_primitive_search server. If doing so, all that should be necessary is to run the associated client file as well as the pointcloud_painter.srv node itself and the necessary yaml file:
+The user can also construct their own client file to interface with the pointcloud_primitive_search server. Look at src/example_client.cpp as a basis from which to work. If doing so, all that should be necessary is to run the client node as well as the pointcloud_painter.srv node itself and load the necessary yaml file:
 
 ```
 rosload param/tunnel_search.yaml
 rosrun pointcloud_primitive_search pointcloud_painter
 ```
+
+Most of the server specifications are set in the yaml file for the server and not in the service datatype itself, so there is not much that the client node needs to do other than feed an input cloud and call the service. 
 
 It is currently necessary to load the yaml file data before loading the server. Failing to do so will keep the server from initializing correctly. There should be more options soon to refresh the server based on changes to the ros parameters (eg loading the yaml file later, or updating ros parameters manually to make changes). 
