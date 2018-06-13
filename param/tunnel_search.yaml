@@ -13,7 +13,7 @@ primitive_search:
     map_offset:     [0.0, -0.6, 0.0, 0.0, 0.1, 0.0]
     tasks:
       left_wall:
-        type:                   5     # Planar Segmentation
+        type:                   4     # Planar Segmentation
         max_iterations:         500
         dist_threshold:         0.04      
         should_publish:         true
@@ -30,7 +30,7 @@ primitive_search:
           # +/- thickness, +/- horizontal, +/- other 
         clip_boundaries:        [-0.25, 0.25, -4.0, 4.0, 0.1, 2.5] #[-0.2, 0.2, -10.0, 10.0, -0.3, 5.0] 
       right_wall: 
-        type:                   5     # Planar Segmentation
+        type:                   4     # Planar Segmentation
         max_iterations:         500
         dist_threshold:         0.04      
         should_publish:         true
@@ -47,7 +47,7 @@ primitive_search:
           # +/- thickness, +/- horizontal, +/- other
         clip_boundaries:        [-0.25, 0.25, -4, 4, 0.1, 2.5]
       floor: 
-        type:                   5     # Planar Segmentation
+        type:                   4     # Planar Segmentation
         max_iterations:         500
         dist_threshold:         0.04      
         should_publish:         true
@@ -64,7 +64,7 @@ primitive_search:
           # +/- thickness, +/- horizontal, +/- other
         clip_boundaries:        [-0.1, 0.1, -4, 4, -3, 3]
       big_duct:           
-        type:                   6     # Cylinder Segmentation
+        type:                   5     # Cylinder Segmentation
         max_iterations:         500
         dist_threshold:         0.06      
         max_radius:             0.6       # meters
@@ -84,7 +84,7 @@ primitive_search:
           # +/- length, +/-/+/- radii
         clip_boundaries:        [-2, 4, -0.60, 0.60, -0.60, 0.60]
       little_duct:           
-        type:                   6     # Cylinder Segmentation
+        type:                   5     # Cylinder Segmentation
         max_iterations:         500
         dist_threshold:         0.06      
         max_radius:             0.35       # meters
@@ -104,7 +104,7 @@ primitive_search:
           # +/- length, +/-/+/- radii
         clip_boundaries:        [-2, 4, -0.35, 0.35, -0.35, 0.35]
       barrel:           
-        type:                   6     # Cylinder Segmentation
+        type:                   5     # Cylinder Segmentation
         max_iterations:         500
         dist_threshold:         0.02      
         max_radius:             0.35       # meters

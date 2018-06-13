@@ -104,8 +104,8 @@ int main(int argc, char **argv)
 { 
     ros::init(argc, argv, "primitive_search");
 
-//    if( ros::console::set_logger_level(ROSCONSOLE_DEFAULT_NAME, ros::console::levels::Debug) )
-//        ros::console::notifyLoggerLevelsChanged();
+    if( ros::console::set_logger_level(ROSCONSOLE_DEFAULT_NAME, ros::console::levels::Debug) )
+        ros::console::notifyLoggerLevelsChanged();
 
     PrimitiveSearch primitive_search;
 

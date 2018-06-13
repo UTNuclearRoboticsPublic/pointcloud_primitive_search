@@ -9,8 +9,8 @@ PrimitiveProcessPublisher::PrimitiveProcessPublisher()
 
 PrimitiveProcessPublisher::PrimitiveProcessPublisher(ros::NodeHandle nh, pointcloud_primitive_search::primitive_process process)
 {
-	if( ros::console::set_logger_level(ROSCONSOLE_DEFAULT_NAME, ros::console::levels::Debug) )
-    	ros::console::notifyLoggerLevelsChanged(); 
+//	if( ros::console::set_logger_level(ROSCONSOLE_DEFAULT_NAME, ros::console::levels::Debug) )
+//    	ros::console::notifyLoggerLevelsChanged(); 
 	nh_ = nh;
 	this->updatePublishers(process);
 }

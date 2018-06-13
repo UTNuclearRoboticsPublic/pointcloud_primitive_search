@@ -35,28 +35,32 @@ SegmentationClient::SegmentationClient()
 
   ROS_INFO("[PointcloudProcessingClient] Service server started.");  
 
+  // Set up subscriber, get parameters...
   pointcloud_sub_ = nh_.subscribe<sensor_msgs::PointCloud2>("/laser_stitcher/output_cloud", 5, &SegmentationClient::pointcloudCallback, this);
   std::string yaml_file_name;
   std::string primitive_yaml_file_name;
   nh_.param<std::string>("test_segmentation/base_yaml_file_name", yaml_file_name, "pointcloud_process");
   nh_.param<std::string>("test_segmentation/primitive_yaml_file_name", primitive_yaml_file_name, "primitive_search");
 
+  // Create input preprocessing specifications based on yaml file
   PointcloudTaskCreation::processFromYAML(&preprocess_, yaml_file_name, "pointcloud_process");
-
+  // Create primitive_search process specifications based on yaml file
   PrimitiveProcessCreation::createProcesses(&primitive_process_, primitive_yaml_file_name);
 
+  // Default states
   service_has_worked_before_ = false;
   shut_down_node_ = false;
 
+  // Setting up publishing for preprocess system
   preprocessing_publisher_.updateNodeHandle(nh_);
   preprocessing_publisher_.updatePublishers(preprocess_);
-
   for (int i=0; i<preprocess_.request.tasks.size(); i++)
   {
     preprocess_.request.tasks[i].should_publish = false;
     preprocess_.request.tasks[i].should_publish_remainder = false;
   }
 
+  // Spin
   while(ros::ok() && !shut_down_node_)
   {
     ros::spinOnce();
@@ -65,25 +69,35 @@ SegmentationClient::SegmentationClient()
 
 void SegmentationClient::pointcloudCallback(const sensor_msgs::PointCloud2 pointcloud_in)
 {
+  // Used for benchmarking performance
   ros::Time time_callback_started = ros::Time::now();
 
+  // Starting callback
   ROS_INFO("[PointcloudProcessingClient] Received pointcloud callback! Attempting service call...");
+
+  // ------------------------------------------------------------
+  // --------------------- Preprocess ---------------------------
+
   preprocess_.request.pointcloud = pointcloud_in;
+  ROS_INFO_STREAM("[PointcloudProcessingClient] " << pointcloud_in.width*pointcloud_in.height << " " << preprocess_.request.tasks.size());
 
-  ROS_INFO_STREAM(pointcloud_in.width*pointcloud_in.height << " " << preprocess_.request.tasks.size());
-
+  // Preprocessing - clipping to reasonable bounds, any desired voxelization, potential floor removal... etc
   ros::ServiceClient preprocess_client = nh_.serviceClient<pointcloud_processing_server::pointcloud_process>("pointcloud_service");
   
+  // Currently just used for output to see how many times failure has occurred
   int num_times_failed = 0; 
 
+  // This loop calls the preprocessing service! Tries again if it fails...
   while ( !preprocess_client.call(preprocess_) ) // If we couldn't read output, the service probably isn't up yet --> retry
   {
+    // If the service has worked before something is wrong - maybe it crashed. Usually this isn't recoverable, so the callback returns here. 
     if(service_has_worked_before_)
     {
       ROS_ERROR_STREAM("[PointcloudProcessingClient] Service call failed, but has worked before - this likely means service node has crashed. Client node shutting down.");
       shut_down_node_ = true;
       return;
     }
+    // If the service hasn't worked before, it might just be because the server isn't up yet! Tries again...
     if(num_times_failed > 10)
     {
       ROS_ERROR_STREAM("[PointcloudProcessingClient] Service call has failed " << num_times_failed << " times. Shutting down client node.");
