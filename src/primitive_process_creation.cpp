@@ -22,19 +22,19 @@ namespace PrimitiveProcessCreation
 	    float plane_max_iterations, plane_threshold_dist, cylinder_max_iterations, cylinder_threshold_dist;        
 	    if( nh.getParam("primitive_search/" + yaml_file_name + "/plane_options/max_iterations", plane_max_iterations) )
 	        for(int i=0; i<all_task_process.request.tasks.size(); i++)
-	            if(all_task_process.request.tasks[i].type_ind == 5)
+	            if(all_task_process.request.tasks[i].type_ind == pointcloud_processing_server::pointcloud_task::PLANE_SEG_TASK)
 	                all_task_process.request.tasks[i].parameters[0] = plane_max_iterations;
 	    if( nh.getParam("primitive_search/" + yaml_file_name + "/plane_options/max_iterations", plane_threshold_dist) )
 	        for(int i=0; i<all_task_process.request.tasks.size(); i++)
-	            if(all_task_process.request.tasks[i].type_ind == 5)
+	            if(all_task_process.request.tasks[i].type_ind == pointcloud_processing_server::pointcloud_task::PLANE_SEG_TASK)
 	                all_task_process.request.tasks[i].parameters[0] = plane_threshold_dist;
 	    if( nh.getParam("primitive_search/" + yaml_file_name + "/cylinder_options/max_iterations", cylinder_max_iterations) )
 	        for(int i=0; i<all_task_process.request.tasks.size(); i++)
-	            if(all_task_process.request.tasks[i].type_ind == 6)
+	            if(all_task_process.request.tasks[i].type_ind == pointcloud_processing_server::pointcloud_task::CYLINDER_SEG_TASK)
 	                all_task_process.request.tasks[i].parameters[0] = cylinder_max_iterations;
 	    if( nh.getParam("primitive_search/" + yaml_file_name + "/cylinder_options/max_iterations", cylinder_threshold_dist) )
 	        for(int i=0; i<all_task_process.request.tasks.size(); i++)
-	            if(all_task_process.request.tasks[i].type_ind == 6)
+	            if(all_task_process.request.tasks[i].type_ind == pointcloud_processing_server::pointcloud_task::CYLINDER_SEG_TASK)
 	                all_task_process.request.tasks[i].parameters[0] = cylinder_threshold_dist;
 	    std::vector<float> map_offset; 
 	    if( !nh.getParam("primitive_search/" + yaml_file_name + "/map_offset", map_offset) )
@@ -54,7 +54,7 @@ namespace PrimitiveProcessCreation
 	        pointcloud_processing_server::pointcloud_task temp_task;
 	        // --------------------- Create Clipping Task -----------------------
 	        temp_task.name = all_task_process.request.tasks[i].name + "_clipping";
-	        temp_task.type_ind = 2;      
+	        temp_task.type_ind = pointcloud_processing_server::pointcloud_task::CLIPPING_TASK;      
 	        temp_task.keep_ordered = false;
 	        temp_task.should_publish = all_task_process.request.tasks[i].should_publish;
 	        temp_task.pub_topic = all_task_process.request.tasks[i].pub_topic + "_clipping";
@@ -68,7 +68,7 @@ namespace PrimitiveProcessCreation
 	        temp_task.type_ind = all_task_process.request.tasks[i].type_ind;
 	        temp_task.parameters.push_back(all_task_process.request.tasks[i].parameters[0]);        
 	        temp_task.parameters.push_back(all_task_process.request.tasks[i].parameters[1]);       
-	        if(temp_task.type_ind == 6)     // Add max_radius (only for Cylinder Segmentation)
+	        if(temp_task.type_ind == pointcloud_processing_server::pointcloud_task::CYLINDER_SEG_TASK)     // Add max_radius (only for Cylinder Segmentation)
 	             temp_task.parameters.push_back(all_task_process.request.tasks[i].parameters[2]);       
 	        temp_task.should_publish = all_task_process.request.tasks[i].should_publish;
 	        temp_task.pub_topic = all_task_process.request.tasks[i].pub_topic;
@@ -170,13 +170,13 @@ namespace PrimitiveProcessCreation
 	        geometry_msgs::Pose clipping_pose;
 	        int marker_type;
 
-	        if(search_input.tasks[1].type_ind == 5)
+	        if(search_input.tasks[1].type_ind == pointcloud_processing_server::pointcloud_task::PLANE_SEG_TASK)
 	        {
 	            clipping_pose = PointcloudUtilities::clippingBoundsPlane(search_input.expected_coefficients); 
 	            marker_type = visualization_msgs::Marker::CUBE; 
 	            search_input.expected_coefficients = PointcloudUtilities::offsetPlaneCoefficients(search_input.expected_coefficients, map_offset);
 	        }
-	        else if(search_input.tasks[1].type_ind == 6)
+	        else if(search_input.tasks[1].type_ind == pointcloud_processing_server::pointcloud_task::CYLINDER_SEG_TASK)
 	        {
 	            clipping_pose = PointcloudUtilities::clippingBoundsCylinder(search_input.expected_coefficients); 
 	            marker_type = visualization_msgs::Marker::CUBE;             // Although the primitive is a cylinder, the clipping box is still a cube 
@@ -199,7 +199,6 @@ namespace PrimitiveProcessCreation
 	        roll -= map_offset[3];
 	        pitch -= map_offset[4];
 	        yaw -= map_offset[5];
-
 
 	        tf_quat.setRPY(roll, pitch, yaw);
 	        tf::quaternionTFToMsg(tf_quat, clipping_pose.orientation);
@@ -226,13 +225,13 @@ namespace PrimitiveProcessCreation
 	        geometry_msgs::Pose clipping_pose;
 	        int marker_type;
 
-	        if(primitive_process.request.inputs[i].tasks[1].type_ind == 5)
+	        if(primitive_process.request.inputs[i].tasks[1].type_ind == pointcloud_processing_server::pointcloud_task::PLANE_SEG_TASK)
 	        {
 	            clipping_pose = PointcloudUtilities::clippingBoundsPlane(primitive_process.request.inputs[i].expected_coefficients); 
 	            marker_type = visualization_msgs::Marker::CUBE; 
 	            primitive_process.request.inputs[i].expected_coefficients = PointcloudUtilities::offsetPlaneCoefficients(primitive_process.request.inputs[i].expected_coefficients, map_offset);
 	        }
-	        else if(primitive_process.request.inputs[i].tasks[1].type_ind == 6)
+	        else if(primitive_process.request.inputs[i].tasks[1].type_ind == pointcloud_processing_server::pointcloud_task::CYLINDER_SEG_TASK)
 	        {
 	            clipping_pose = PointcloudUtilities::clippingBoundsCylinder(primitive_process.request.inputs[i].expected_coefficients); 
 	            marker_type = visualization_msgs::Marker::CUBE;             // Although the primitive is a cylinder, the clipping box is still a cube 

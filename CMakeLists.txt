@@ -39,7 +39,7 @@ generate_messages(
 
 catkin_package(
   INCLUDE_DIRS include
-  LIBRARIES reg_creation primitive_process_creation primitive_process_publisher
+  LIBRARIES primitive_process_creation primitive_process_publisher
   CATKIN_DEPENDS pointcloud_processing_server
 )
 
@@ -69,7 +69,7 @@ add_dependencies(
 )
 
 add_library(primitive_process_creation src/primitive_process_creation.cpp)
-add_dependencies(primitive_process_creation ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS} pointcloud_utilities pointcloud_task_creation)
+add_dependencies(primitive_process_creation ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 add_library(primitive_process_publisher src/primitive_process_publisher.cpp)
 add_dependencies(primitive_process_publisher ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})

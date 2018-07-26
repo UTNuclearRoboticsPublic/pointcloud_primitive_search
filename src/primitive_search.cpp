@@ -57,20 +57,24 @@ bool PrimitiveSearch::primitiveSearch(pointcloud_primitive_search::primitive_pro
 
             switch(current_process.request.tasks[1].type_ind)
             {
-                case 5: // IS A PLANE
+                case pointcloud_processing_server::pointcloud_task::PLANE_SEG_TASK: // IS A PLANE
                     if( PointcloudUtilities::checkPlaneValidity(req.inputs[i].expected_coefficients, current_process.response.task_results[1].primitive_coefficients, req.inputs[i].check_orientations, req.inputs[i].check_distances, req.inputs[i].angle_threshold, req.inputs[i].offset_threshold) )
                     {
                         match_found = true;
                         ROS_DEBUG_STREAM("[PrimitiveSearch] Found an acceptable plane! Matched to task " << current_process.request.tasks[1].name << ".");
                     }
+                    else
+                        ROS_DEBUG_STREAM("[PrimitiveSearch] Found a plane, but it's not acceptable... expected: " << req.inputs[i].expected_coefficients[0] << " " << req.inputs[i].expected_coefficients[1] << " " << req.inputs[i].expected_coefficients[2] << " " << req.inputs[i].expected_coefficients[3]);
                     break;
 
-                case 6: // IS A CYLINDER
+                case pointcloud_processing_server::pointcloud_task::CYLINDER_SEG_TASK: // IS A CYLINDER
                     if( PointcloudUtilities::checkCylinderValidity(req.inputs[i].expected_coefficients, current_process.response.task_results[1].primitive_coefficients, req.inputs[i].check_radii, req.inputs[i].check_orientations, req.inputs[i].check_distances, req.inputs[i].radius_threshold, req.inputs[i].angle_threshold, req.inputs[i].offset_threshold) )
                     {
                         match_found = true;
                         ROS_DEBUG_STREAM("[PrimitiveSearch] Found an acceptable cylinder! Matched to task " << current_process.request.tasks[1].name << ".");
                     }
+                    else
+                        ROS_DEBUG_STREAM("[PrimitiveSearch] Found a cylinder, but it's not acceptable... expected: " << req.inputs[i].expected_coefficients[0] << " " << req.inputs[i].expected_coefficients[1] << " " << req.inputs[i].expected_coefficients[2] << " " << req.inputs[i].expected_coefficients[3] << " " << req.inputs[i].expected_coefficients[3] << " " << req.inputs[i].expected_coefficients[4] << " " << req.inputs[i].expected_coefficients[5] << " " << req.inputs[i].expected_coefficients[6]);
                     break;
             }
 
