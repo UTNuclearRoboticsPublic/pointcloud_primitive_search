@@ -9,8 +9,8 @@ PrimitiveProcessPublisher::PrimitiveProcessPublisher()
 
 PrimitiveProcessPublisher::PrimitiveProcessPublisher(ros::NodeHandle nh, pointcloud_primitive_search::primitive_process process)
 {
-//	if( ros::console::set_logger_level(ROSCONSOLE_DEFAULT_NAME, ros::console::levels::Debug) )
-//    	ros::console::notifyLoggerLevelsChanged(); 
+	if( ros::console::set_logger_level(ROSCONSOLE_DEFAULT_NAME, ros::console::levels::Debug) )
+    	ros::console::notifyLoggerLevelsChanged(); 
 	nh_ = nh;
 	this->updatePublishers(process);
 }
@@ -55,7 +55,7 @@ void PrimitiveProcessPublisher::publish(pointcloud_primitive_search::primitive_p
 			if(!process.response.outputs[i].failed) // Don't publish from failed tasks
 			{
 				// Don't publish unless cloud size > minimum 
-				if(process.response.outputs[i].task_results[i].task_pointcloud.width*process.response.outputs[i].task_results[i].task_pointcloud.height > process.request.inputs[i].min_cloud_size)
+				if(process.response.outputs[i].task_results[1].task_pointcloud.width*process.response.outputs[i].task_results[1].task_pointcloud.height > process.request.inputs[i].min_cloud_size)
 				{
 					ROS_DEBUG_STREAM("[PrimitiveProcessPublisher] Attempting to publish primitive primitive of size " << process.response.outputs[i].task_results[1].task_pointcloud.width*process.response.outputs[i].task_results[1].task_pointcloud.height << " from process " << process.request.inputs[i].tasks[1].name << ".");
 					primitive_pub_[i].publish(process.response.outputs[i].task_results[1].task_pointcloud);
@@ -64,6 +64,7 @@ void PrimitiveProcessPublisher::publish(pointcloud_primitive_search::primitive_p
 			}
 		}
 	}
+	ros::Duration(1.0).sleep();
 	//if(bag_is_running_)
 		// kill 
 }

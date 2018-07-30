@@ -40,6 +40,8 @@ namespace PrimitiveProcessCreation
 	    if( !nh.getParam("primitive_search/" + yaml_file_name + "/map_offset", map_offset) )
 	        for(int i=0; i<6; i++)
 	            map_offset.push_back(0);
+        int min_cloud_size;
+        nh.param("primitive_search/" + yaml_file_name + "/min_cloud_size", min_cloud_size, 50);
 	// ------------------------------------------------------------------------------------------
 	// --------------------- Create list of processes and associated data -----------------------
 
@@ -77,7 +79,7 @@ namespace PrimitiveProcessCreation
 	        temp_task.remove_cloud = all_task_process.request.tasks[i].remove_cloud;
 	        
 	        search_input.tasks.push_back(temp_task);
-	        search_input.min_cloud_size = 50;
+	        search_input.min_cloud_size = min_cloud_size;
 
 	        // --------------------- Create Other Parameter Lists -----------------------
 	        std::vector<float> temp_coefficients;
