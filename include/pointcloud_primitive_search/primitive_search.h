@@ -6,6 +6,8 @@
 #include "pointcloud_processing_server/pointcloud_utilities.h"
 #include "pointcloud_processing_server/pointcloud_process_publisher.h"
 
+#include <pointcloud_subtraction/pointcloud_subtraction.h>
+
 class PrimitiveSearch
 {
 public: 

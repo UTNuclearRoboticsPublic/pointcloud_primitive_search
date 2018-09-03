@@ -23,6 +23,9 @@ bool PrimitiveSearch::primitiveSearch(pointcloud_primitive_search::primitive_pro
 // -------------------------- Actual loop to look for primitives! --------------------------
     bool match_found = false;
     bool process_failed = false;
+
+    sensor_msgs::PointCloud2 current_pointcloud = req.pointcloud;    // This can become a subset of the input one, if found primitives are cut out for subsequent searches
+    
     for(int i=0; i<req.inputs.size(); i++)
     {
         ROS_DEBUG_STREAM("[PrimitiveSearch] Starting a new primitive search...");
@@ -31,7 +34,7 @@ bool PrimitiveSearch::primitiveSearch(pointcloud_primitive_search::primitive_pro
         pointcloud_processing_server::pointcloud_process current_process;
         current_process.request.tasks.push_back(req.inputs[i].tasks[0]);
         current_process.request.tasks.push_back(req.inputs[i].tasks[1]);
-        current_process.request.pointcloud = req.pointcloud;
+        current_process.request.pointcloud = current_pointcloud;
         current_process.request.min_cloud_size = req.inputs[i].min_cloud_size;
 
         while ( !match_found && !process_failed && ros::ok()  )
@@ -84,8 +87,18 @@ bool PrimitiveSearch::primitiveSearch(pointcloud_primitive_search::primitive_pro
                 current_process.request.pointcloud = current_process.response.task_results[1].remaining_pointcloud;
             }
             // realistically, remove_cloud should probably always be TRUE for this kind of work... but for flexibility's sake: 
-            else if(current_process.request.tasks[1].remove_cloud) 
+            else
+            {
                 ROS_DEBUG_STREAM("[PrimitiveSearch] Found primitive for task " << current_process.request.tasks[1].name << " is acceptable! Continuing on...");
+                if(current_process.request.tasks[1].remove_cloud)
+                {
+                    // Remove the found primitive from the overall input cloud
+                    // This keeps points from this primitive being included in later primitives found in the remaining searches
+                    current_pointcloud = PointcloudSubtraction::subtractClouds(current_process.request.pointcloud, current_process.response.task_results[1].task_pointcloud, false, false, false, 0.0, 3);
+                    ROS_INFO_STREAM("made it here...");
+                    ros::Duration(1.0).sleep();
+                } 
+            }
         }  
         match_found = false;        // might need to do something more deliberate to store found primitives? 
         process_failed = false;

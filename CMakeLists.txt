@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 2.8.3)
 project(pointcloud_primitive_search)
 
 ## Compile as C++11, supported in ROS Kinetic and newer
-# add_compile_options(-std=c++11)
+ add_compile_options(-std=c++11)
 
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
@@ -16,6 +16,10 @@ find_package(catkin REQUIRED COMPONENTS
   pcl_conversions 
   pcl_ros
   pointcloud_processing_server
+  pointcloud_subtraction
+  tf2
+  laser_geometry
+  message_generation
 )
 
 find_package(Boost REQUIRED COMPONENTS system)
@@ -44,6 +48,8 @@ catkin_package(
 )
 
 include_directories(include ${catkin_INCLUDE_DIRS} ${OpenCV_INCLUDE_DIRS} ${pcl_INCLUDE_DIRS})
+link_directories(${PCL_LIBRARY_DIRS})
+add_definitions(${PCL_DEFINITIONS})
 
 add_executable(example_client src/example_client.cpp)
 target_link_libraries( 

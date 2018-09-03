@@ -9,8 +9,8 @@ PrimitiveProcessPublisher::PrimitiveProcessPublisher()
 
 PrimitiveProcessPublisher::PrimitiveProcessPublisher(ros::NodeHandle nh, pointcloud_primitive_search::primitive_process process)
 {
-	if( ros::console::set_logger_level(ROSCONSOLE_DEFAULT_NAME, ros::console::levels::Debug) )
-    	ros::console::notifyLoggerLevelsChanged(); 
+	//if( ros::console::set_logger_level(ROSCONSOLE_DEFAULT_NAME, ros::console::levels::Debug) )
+    //	ros::console::notifyLoggerLevelsChanged(); 
 	nh_ = nh;
 	this->updatePublishers(process);
 }
@@ -64,17 +64,27 @@ void PrimitiveProcessPublisher::publish(pointcloud_primitive_search::primitive_p
 			}
 		}
 	}
-	ros::Duration(1.0).sleep();
-	//if(bag_is_running_)
-		// kill 
 }
 
-void PrimitiveProcessPublisher::createBag(std::string file_name)
-{/*
-	ROS_ERROR_STREAM("saving");
-	rosbag::Bag bag;
-	bag.open(bag_name_+".bag", rosbag::bagmode::Write);
-	bag.write(cloud_pub_.getTopic(), ros::Time::now(), summed_pointcloud_);  */
+void PrimitiveProcessPublisher::saveClouds(pointcloud_primitive_search::primitive_process process)
+{
+	for(int i=0; i<process.response.outputs.size(); i++)
+	{
+		if(!process.response.outputs[i].failed)
+		{
+			// Save ROS Bag File
+			rosbag::Bag bag;
+			std::string bag_name = "primitive_search_" + process.request.inputs[i].tasks[1].pub_topic + std::to_string(ros::Time::now().toSec()) + ".bag";
+			bag.open(bag_name, rosbag::bagmode::Write);
+			bag.write("/" + process.request.inputs[i].tasks[1].pub_topic, ros::Time::now(), process.response.outputs[i].task_results[1].task_pointcloud);
+			ROS_INFO_STREAM("[PrimitiveSearch] Saved a ROSBAG to the file " << bag_name);
+			// Save PCL PCD File 
+			pcl::PointCloud<pcl::PointXYZI> temp_cloud;
+			pcl::fromROSMsg(process.response.outputs[i].task_results[1].task_pointcloud, temp_cloud);
+		    //pcl::io::savePCDFileASCII("tunnel_inspection_" + std::to_string(ros::Time::now().toSec()) + ".pcd", temp_cloud);
+		    ROS_INFO_STREAM("[PrimitiveSearch] Saved " << temp_cloud.points.size() << " data points to a pcd file");
+		}
+	}
 }
 
 bool PrimitiveProcessPublisher::isInitialized()
