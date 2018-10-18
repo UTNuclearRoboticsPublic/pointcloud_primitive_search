@@ -48,7 +48,11 @@ bool PrimitiveSearch::primitiveSearch(pointcloud_primitive_search::primitive_pro
                 ros::Duration(1).sleep();
             }
 
+            // Check whether segmentation failed:
             process_failed = current_process.response.failed;
+            // If segmentation succeeded, check whether segmented cloud is big enough:
+            if(!process_failed)
+                process_failed = (current_process.response.task_results[1].task_pointcloud.height*current_process.response.task_results[1].task_pointcloud.width < req.inputs[i].min_cloud_size);
 
             if(process_failed)
             {
@@ -94,7 +98,7 @@ bool PrimitiveSearch::primitiveSearch(pointcloud_primitive_search::primitive_pro
                 {
                     // Remove the found primitive from the overall input cloud
                     // This keeps points from this primitive being included in later primitives found in the remaining searches
-                    current_pointcloud = PointcloudSubtraction::subtractClouds(current_process.request.pointcloud, current_process.response.task_results[1].task_pointcloud, false, false, false, 0.0, 3);
+                    current_pointcloud = PointcloudSubtraction::subtractClouds(current_pointcloud, current_process.response.task_results[1].task_pointcloud, false, false, false, 0.0, 3);
                     ROS_INFO_STREAM("made it here...");
                     ros::Duration(1.0).sleep();
                 } 
