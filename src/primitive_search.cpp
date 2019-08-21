@@ -121,6 +121,7 @@ bool PrimitiveSearch::primitiveSearch(pointcloud_primitive_search::primitive_pro
     return true;
 }
 
+
 int main(int argc, char **argv)
 { 
     ros::init(argc, argv, "primitive_search");
@@ -134,5 +135,5 @@ int main(int argc, char **argv)
 
     ros::Duration(2.0).sleep();
 
-	return 0;
+	return 0; 
 }

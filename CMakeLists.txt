@@ -56,7 +56,6 @@ target_link_libraries(
   example_client primitive_process_publisher primitive_process_creation
   ${catkin_LIBRARIES}
 )
-target_link_libraries(example_client)
 add_dependencies(
   example_client 
   ${pointcloud_primitive_search_EXPORTED_TARGETS}
@@ -65,7 +64,7 @@ add_dependencies(
 
 add_executable(primitive_search src/primitive_search.cpp)
 target_link_libraries( 
-  primitive_search 
+  primitive_search
   ${catkin_LIBRARIES}
 )
 add_dependencies(

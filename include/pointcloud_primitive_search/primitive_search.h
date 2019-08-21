@@ -2,11 +2,14 @@
 #ifndef PRIMITIVE_SEARCH_H
 #define PRIMITIVE_SEARCH_H
 
+
 #include "pointcloud_primitive_search/primitive_process.h"
 #include "pointcloud_processing_server/pointcloud_utilities.h"
 #include "pointcloud_processing_server/pointcloud_process_publisher.h"
 
 #include <pointcloud_subtraction/pointcloud_subtraction.h>
+
+#include <tf/tf.h>
 
 class PrimitiveSearch
 {
